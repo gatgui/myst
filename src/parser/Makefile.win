@@ -1,0 +1,17 @@
+
+all: myst
+
+myst.yy.c: myst.l
+	flex -omyst.yy.c myst.l
+
+myst.exe: myst.yy.c
+	cl /nologo /Iwindows /EHsc /MD /Tpmyst.yy.c /Femyst.exe
+	@mt /nologo /manifest myst.exe.manifest /outputresource:myst.exe;#1
+	@rm myst.exe.manifest
+	@rm myst.yy.obj
+
+myst: myst.exe
+
+clean:
+	rm -f myst.exe
+	rm -f myst.yy.c

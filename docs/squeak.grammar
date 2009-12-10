@@ -1,0 +1,106 @@
+method = message_pattern [temporaries] [primitive_declaration] [statements].
+
+message_pattern = unary_selector | binary_selector argument_name | [keyword argument_name]+.
+
+temporaries = "|" [variable_name]* "|".
+NOTE: variables are initialized to nil when declared.
+
+primitive_declaration = "<" "primitive:" decimal_digits ">".
+NOTE: primitive_declaration also takes the form of "<" "primitive:" method_name_string "module:" module_name_string ">"
+
+block = "[" [[":" argument_name]+ "|"] [temporaries] [statements] "]".
+NOTE: As of version 2.6, Squeak has block local temporaries in a somewhat limited form. Squeak does not yet handle blocks as full closures – block arguments are actually compiled as "hidden" temporaries and block local temps have the same name scope as the method temps.
+
+statements = [expression "."]* ["^"] expression ["."].
+NOTE: the trailing "." after the final expression in a block or method is discouraged but allowed; "^" denotes a return expression – it is always the last statement in a block or method.
+
+brace_expression = "{" [expression ["." expression]*] "}".
+NOTE: a brace_expression creates an array by evaluating each expression at runtime. As of 2.7alpha, assignment into a brace_expression is no longer allowed.
+
+expression = [variable_name assignment_op]* (primary | message_expression | cascaded_message_expression).
+
+primary = variable_name | argument_name | literal | block | brace_expression | "(" expression ")".
+
+assignment_op = ":=" | "_".
+NOTE: "_" is displayed as left-arrow
+
+cascaded_message_expression = message_expression [";" ( unary_selector | binary_selector unary_object_description | [keyword binary_object_description]+ ) ]+.
+
+message_expression = unary_expression | binary_expression | keyword_expression.
+
+keyword_expression = binary_object_description [keyword binary_object_description]+.
+
+binary_expression = binary_object_description binary_selector unary_object_description.
+
+unary_expression = unary_object_description unary_selector.
+binary_object_description = unary_object_description | binary_expression.
+
+unary_object_description = primary | unary_expression.
+
+keyword = identifier ":".
+NOTE: by convention keywords begin with lowercase, but this is not enforced by the system.
+
+binary_selector = (special_character [special_character]) | ("-" [special_character]) | "|".
+NOTE: "|" may not be doubled in Squeak for a binary_selector, nor used with any other special_character for a binary_selector - bug?
+
+unary_selector = identifier.
+NOTE: by convention unary message names begin with lowercase, but this is not enforced by the system.
+
+argument_name = identifier.
+NOTE: arguments cannot be assigned to (at least it should be disallowed). By convention argument names begin with lowercase, but this is not enforced by the system.
+
+variable_name = identifier.
+NOTE: by convention variable names begin with lowercase, but this is not enforced by the system.
+
+class_name = capital_identifier.
+
+class_variable_name = capital_identifier.
+
+instance_variable_name = identifier.
+NOTE: by convention instance variables begin with lowercase, but this is not enforced by the system.
+
+class_instance_variable_name = identifier.
+NOTE: by convention class instance variables begin with lowercase, but this is not enforced by the system.
+
+literal = (number | symbol_constant | character_constant | string | array_constant).
+
+array_constant = "#" array.
+
+array = "(" [number | symbol | string | character_constant | array]* ")".
+
+comment = """ [character | """ """ | "'"]* """.
+NOTE: a comment may appear anywhere and simply acts the same as whitespace as far as Squeak is concerned.
+
+string = "'" [character | "'" "'" | """]* "'".
+
+character_constant = "$"(character | "'" | """).
+
+symbol_constant = "#" symbol.
+
+symbol = identifier | binary_selector | [keyword]+ | string.
+
+identifier = letter [letter | decimal_digit]*.
+
+capital_identifier = uppercase [letter | decimal_digit]*.
+
+letter = uppercase | lowercase.
+
+character = ("[" | "]" | "{" | "}" | "(" | ")" | "_" | "^" | ";" | "$" | "#" | ":" | "-" | "|" | ".") | decimal_digit | letter | special_character.
+
+special_character = ("+" | "*" | "/" | "\" | "~" | "<" | ">" | "=" | "@" | "%" | "&" | "?" | "!" | "`" | "," ).
+
+uppercase = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z".
+
+lowercase = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z".
+
+number = ["-"][radix"r"]["-"]digits["."digits]["e"["-"]exponent].
+NOTE: the set of digits allowed in a number of radix N is the first N characters of the string '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; default radix = 10, for all others you must explicitly specify the radix;
+
+exponent = decimal_digits.
+
+radix = decimal_digits.
+NOTE: radix is between 2 and 36 inclusive (actually, Squeak checks only the lower bound – you may make the upper bound as large as you wish, but can represent only the first 36 digits of the larger base; numbers entered using them are interpreted correctly however).
+
+digits = [digit]+.
+
+digit = decimal_digit | uppercase.
