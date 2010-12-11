@@ -23,8 +23,11 @@ USA.
 
 class Parser {
   public:
-    Parser();
-    ~Parser();
+    Parser() {
+    }
+    
+    ~Parser() {
+    }
     
     void parseFile(const char *s) {
       yyin = fopen(s, "r");
@@ -39,4 +42,12 @@ class Parser {
       // what about BEGIN(INITIAL)
       // need to do switch back stuff in the <<EOF>> rule
     }
+  
+  protected:
+    
+    // protected members
+    // beware not to call parser from different threads
+    // as flex seems to have a good deal of globals
+    // except if we can find a way to get the current parser
+    // from the callbacks (there might be a way)
 };
