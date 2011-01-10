@@ -18,3 +18,8 @@ self neg
 ^value
 
 1.9 ^ -4
+
+
+("hello " + (1.5 pow: 2.4) invert toStr) print.
+"hello" + 1.5 pow: 2.5 invert toStr.
+

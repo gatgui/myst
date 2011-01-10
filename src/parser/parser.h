@@ -30,6 +30,7 @@ class Parser {
     }
     
     void parseFile(const char *s) {
+      /*
       yyin = fopen(s, "r");
       YY_NEW_FILE //?
       YY_BUFFER_STATE oldState = YY_CURRENT_BUFFER;
@@ -41,6 +42,7 @@ class Parser {
       // if done -> yyterminate()
       // what about BEGIN(INITIAL)
       // need to do switch back stuff in the <<EOF>> rule
+      */
     }
   
   protected:
