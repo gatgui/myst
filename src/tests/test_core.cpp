@@ -125,6 +125,9 @@ int main(int, char**) {
     
     
     myst::InstructionList code;
+    /*
+    ("exp(1.5 + (-2.34)) = " + (1.5 add: -2.34) exp toStr) print.
+    */
     code.push_back(new myst::PushString("exp(1.5 + (-2.34)) = "));
     code.push_back(new myst::PushReal(1.5));
     code.push_back(new myst::PushReal(-2.34));

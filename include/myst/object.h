@@ -33,8 +33,8 @@ namespace myst {
   class MYST_API Method;
   class MYST_API Context;
   
-  class MYST_API Object {
-    
+  class MYST_API Object
+  {  
     // Object tracking (and garbage collection then maybe?)
     // For now, do it dumb, this will blow the memory in the long term
     
@@ -115,24 +115,15 @@ namespace myst {
       Object* call(Context *ctx, const std::string &n,
                    size_t nargs, Object **args) throw(Exception);
       
-      inline Class* klass() {
-        return mClass;
-      }
-      
+      Class* klass();
       bool isKindOf(Class *);
       bool isA(Class *);
       bool respondsTo(const std::string &);
       size_t methods(StringList &names);
       size_t variables(StringList &names);
       
-      inline void clearMark() {
-        mMark = false;
-      }
-      
-      inline bool isMarked() {
-        return mMark;
-      }
-      
+      void clearMark();
+      bool isMarked();
       virtual void mark();
       
       friend class MYST_API Class;
@@ -145,6 +136,20 @@ namespace myst {
       bool mMark;
   };
   
+  inline Class* Object::klass()
+  {
+    return mClass;
+  }
+  
+  inline void Object::clearMark()
+  {
+    mMark = false;
+  }
+  
+  inline bool Object::isMarked()
+  {
+    return mMark;
+  }
 }
 
 #endif
